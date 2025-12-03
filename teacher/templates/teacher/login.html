@@ -1,0 +1,26 @@
+{% extends 'teacher/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4"><i class="fas fa-sign-in-alt"></i> Teacher Login</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-info w-100">
+                        <i class="fas fa-arrow-right"></i> Login
+                    </button>
+                </form>
+                <p class="text-center mt-3">
+                    <a href="{% url 'teacher_register' %}">New here? Register as Teacher</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

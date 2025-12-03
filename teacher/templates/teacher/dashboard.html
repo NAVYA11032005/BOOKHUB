@@ -1,0 +1,91 @@
+{% extends 'teacher/base.html' %}
+{% block content %}
+<h2>Welcome, <strong>{{ teacher.teacher.name }}</strong>!</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5>Pending</h5>
+                <h2>{{ pending_count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5>Approved</h5>
+                <h2>{{ approved_count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-secondary">
+            <div class="card-body">
+                <h5>Total</h5>
+                <h2>{{ appointments.count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5>Messages</h5>
+                <h2>{{ messages.count }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- APPOINTMENTS -->
+<h4>Appointments</h4>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Student</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td>{{ appt.student.name }}</td>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time_slot }}</td>
+                <td>
+                    <span class="badge bg-{% if appt.status == 'approved' %}success{% elif appt.status == 'pending' %}warning{% else %}danger{% endif %}">
+                        {{ appt.status|title }}
+                    </span>
+                </td>
+                <td>
+                    {% if appt.status != 'cancelled' %}
+                    <a href="{% url 'manage_appointment' appt.pk %}" class="btn btn-sm btn-primary">Manage</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center">No appointments yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- MESSAGES -->
+<h4 class="mt-5">Student Messages</h4>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Student</th><th>Message</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+            {% for msg in messages %}
+            <tr class="{% if not msg.read %}table-info font-weight-bold{% endif %}">
+                <td>{{ msg.student.name }}</td>
+                <td>{{ msg.message|truncatewords:10 }}</td>
+                <td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center">No messages.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

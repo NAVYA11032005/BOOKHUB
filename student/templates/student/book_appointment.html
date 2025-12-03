@@ -1,0 +1,25 @@
+{% extends 'student/base.html' %}
+{% block content %}
+<h3>Book Appointment</h3>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label>Teacher</label>
+        {{ form.teacher }}
+    </div>
+    <div class="mb-3">
+        <label>Date</label>
+        {{ form.date }}
+    </div>
+    <div class="mb-3">
+        <label>Time Slot</label>
+        {{ form.time_slot }}
+    </div>
+    <div class="mb-3">
+        <label>Purpose</label>
+        {{ form.purpose }}
+    </div>
+    <button type="submit" class="btn btn-success">Book Appointment</button>
+    <a href="{% url 'student_dashboard' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

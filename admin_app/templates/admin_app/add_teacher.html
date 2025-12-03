@@ -1,0 +1,50 @@
+{% extends 'admin_app/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h3>Add New Teacher <small class="text-muted">(Auto-creates login account)</small></h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Department</label>
+                        {{ form.department }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        {{ form.subject }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Login Username</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Login Password</label>
+                        {{ form.password }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Teacher Account</button>
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+        <div class="alert alert-info mt-3">
+            <strong>How it works:</strong> Fill form → Auto-creates User + TeacherProfile → Teacher can login immediately!
+        </div>
+    </div>
+</div>
+{% endblock %}

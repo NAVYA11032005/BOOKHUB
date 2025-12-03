@@ -1,0 +1,16 @@
+{% extends 'student/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h3>Student Registration</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">{{ form.as_p }}</div>
+            <button type="submit" class="btn btn-success w-100">Register & Wait for Approval</button>
+        </form>
+        <p class="text-center mt-3">
+            <a href="{% url 'student_login' %}">Already registered? Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'teacher/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h3>Teacher Registration</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" class="form-control" name="name" placeholder="Full Name" required>
+            </div>
+            <div class="mb-3">
+                <input type="email" class="form-control" name="email" placeholder="Email" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="department" placeholder="Department" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="phone" placeholder="Phone">
+            </div>
+            <button type="submit" class="btn btn-success w-100">Submit & Wait Approval</button>
+        </form>
+        <p class="text-center mt-3">
+            <a href="{% url 'teacher_login' %}">Already registered? Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

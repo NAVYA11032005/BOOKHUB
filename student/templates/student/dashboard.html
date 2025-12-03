@@ -1,0 +1,33 @@
+{% extends 'student/base.html' %}
+{% block content %}
+<h2>Welcome, {{ student.name }}!</h2>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <a href="{% url 'book_appointment' %}" class="btn btn-success w-100 mb-2">
+            <i class="fas fa-calendar-plus"></i> Book Appointment
+        </a>
+    </div>
+</div>
+
+<h4>Your Appointments</h4>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Teacher</th><th>Date</th><th>Time</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td>{{ appt.teacher.name }}</td>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time_slot }}</td>
+                <td><span class="badge bg-{% if appt.status == 'approved' %}success{% elif appt.status == 'pending' %}warning{% else %}danger{% endif %}">{{ appt.status|title }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No appointments booked yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

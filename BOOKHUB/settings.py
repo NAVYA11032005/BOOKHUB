@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
+    'student',
+    'teacher',
+    'admin_app',
 ]
 
 MIDDLEWARE = [
@@ -54,8 +58,8 @@ ROOT_URLCONF = 'BOOKHUB.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'templates'],  # ADD THIS LINE
+        'APP_DIRS': True,                  # ADD THIS LINE
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -66,19 +70,27 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'BOOKHUB.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# BOOKHUB/settings.py - Replace DATABASES section
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'BookHub_db',           # Your database name
+        'USER': 'root',                 # MySQL username
+        'PASSWORD': '',  # Your MySQL password
+        'HOST': 'localhost',            # Or 127.0.0.1
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
+
 
 
 # Password validation
@@ -112,10 +124,20 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+import os
+from pathlib import Path
 
-STATIC_URL = 'static/'
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# ... rest of your settings ...
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

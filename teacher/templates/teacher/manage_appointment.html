@@ -1,0 +1,22 @@
+{% extends 'teacher/base.html' %}
+{% block content %}
+<h3>Manage Appointment</h3>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5>{{ appointment.student.name }}</h5>
+                <p><strong>Date:</strong> {{ appointment.date }}</p>
+                <p><strong>Time:</strong> {{ appointment.time_slot }}</p>
+                <p><strong>Purpose:</strong> {{ appointment.purpose }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">{{ form.status.label_tag }} {{ form.status }}</div>
+    <button type="submit" class="btn btn-primary">Update Status</button>
+    <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary">Back</a>
+</form>
+{% endblock %}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKHUB - Student Teacher Appointment Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .role-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .role-icon { font-size: 4rem; color: white; }
+        .admin-card { background: linear-gradient(45deg, #ff6b6b, #ee5a24); }
+        .teacher-card { background: linear-gradient(45deg, #4834d4, #686de0); }
+        .student-card { background: linear-gradient(45deg, #10ac84, #1dd1a1); }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center">
+    <div class="container text-center py-5">
+        <h1 class="display-4 fw-bold text-white mb-5 animate__animated animate__fadeIn">
+            <i class="fas fa-calendar-check me-3"></i>BOOKHUB
+        </h1>
+        <p class="lead text-white-50 mb-5 animate__animated animate__fadeInUp">Student-Teacher Appointment Booking System</p>
+        
+        <div class="row g-4 justify-content-center">
+            <!-- ADMIN ROLE -->
+            <div class="col-md-3">
+                <a href="/admin_app/" class="text-decoration-none">
+                    <div class="card role-card admin-card h-100">
+                        <div class="card-body p-4">
+                            <div class="role-icon mb-3"><i class="fas fa-user-shield"></i></div>
+                            <h3 class="text-white fw-bold mb-2">ADMIN</h3>
+                            <p class="text-white-50 mb-0">Manage Teachers & Students</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- TEACHER ROLE -->
+            <div class="col-md-3">
+                <a href="/teacher/" class="text-decoration-none">
+                    <div class="card role-card teacher-card h-100">
+                        <div class="card-body p-4">
+                            <div class="role-icon mb-3"><i class="fas fa-chalkboard-teacher"></i></div>
+                            <h3 class="text-white fw-bold mb-2">TEACHER</h3>
+                            <p class="text-white-50 mb-0">Schedule & Manage Appointments</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- STUDENT ROLE -->
+            <div class="col-md-3">
+                <a href="/student/" class="text-decoration-none">
+                    <div class="card role-card student-card h-100">
+                        <div class="card-body p-4">
+                            <div class="role-icon mb-3"><i class="fas fa-user-graduate"></i></div>
+                            <h3 class="text-white fw-bold mb-2">STUDENT</h3>
+                            <p class="text-white-50 mb-0">Book Appointments & Send Messages</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <p class="text-white-50">Select your role to continue <i class="fas fa-arrow-down ms-2"></i></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
+</body>
+</html>
