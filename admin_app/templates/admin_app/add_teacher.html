@@ -1,50 +1,1224 @@
 {% extends 'admin_app/base.html' %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h3>Add New Teacher <small class="text-muted">(Auto-creates login account)</small></h3>
-        <form method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        {{ form.name }}
+<div class="teacher-form-container">
+    <!-- Header Section -->
+    <div class="form-header mb-5">
+        <div class="d-flex align-items-center mb-4">
+            <div class="header-icon me-3">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div>
+                <h1 class="page-title mb-1">Add New Teacher</h1>
+                <p class="page-subtitle text-muted">
+                    <i class="fas fa-magic me-2"></i>
+                    Auto-creates login account with immediate access
+                </p>
+            </div>
+        </div>
+        
+        <!-- Process Steps -->
+        <div class="process-steps mb-4">
+            <div class="steps-container">
+                <div class="step active">
+                    <div class="step-icon">
+                        <i class="fas fa-edit"></i>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Department</label>
-                        {{ form.department }}
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Subject</label>
-                        {{ form.subject }}
+                    <div class="step-content">
+                        <span class="step-title">Fill Details</span>
+                        <span class="step-desc">Enter teacher information</span>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        {{ form.email }}
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-user-check"></i>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phone</label>
-                        {{ form.phone }}
+                    <div class="step-content">
+                        <span class="step-title">Auto-Create</span>
+                        <span class="step-desc">System generates account</span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Login Username</label>
-                        {{ form.username }}
+                </div>
+                <div class="step">
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Login Password</label>
-                        {{ form.password }}
+                    <div class="step-content">
+                        <span class="step-title">Ready</span>
+                        <span class="step-desc">Teacher can login</span>
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Create Teacher Account</button>
-            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
-        </form>
-        <div class="alert alert-info mt-3">
-            <strong>How it works:</strong> Fill form → Auto-creates User + TeacherProfile → Teacher can login immediately!
+        </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="form-card-wrapper">
+        <div class="form-card">
+            <form method="post" id="addTeacherForm">
+                {% csrf_token %}
+                
+                <!-- Personal Details Section -->
+                <div class="form-section mb-5">
+                    <div class="section-header mb-4">
+                        <h3 class="section-title">
+                            <i class="fas fa-id-card me-2"></i>
+                            Personal Information
+                        </h3>
+                        <p class="section-subtitle text-muted">Basic details for teacher profile</p>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <!-- Name Field -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="label-icon">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <span class="label-text">Full Name</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-container">
+                                    <div class="input-prefix">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    {{ form.name }}
+                                    <div class="input-suffix">
+                                        <i class="fas fa-check valid-indicator"></i>
+                                    </div>
+                                </div>
+                                <div class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Full name as it should appear in the system</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Department Field -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="label-icon">
+                                        <i class="fas fa-building"></i>
+                                    </span>
+                                    <span class="label-text">Department</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-container">
+                                    <div class="input-prefix">
+                                        <i class="fas fa-sitemap"></i>
+                                    </div>
+                                    {{ form.department }}
+                                    <div class="input-suffix">
+                                        <button type="button" class="btn-input-action" title="Browse Departments">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Select or enter department name</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subject Field -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="label-icon">
+                                        <i class="fas fa-book"></i>
+                                    </span>
+                                    <span class="label-text">Subject</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-container">
+                                    <div class="input-prefix">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    {{ form.subject }}
+                                    <div class="input-suffix">
+                                        <button type="button" class="btn-input-action" title="Browse Subjects">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Primary teaching subject</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="label-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <span class="label-text">Email Address</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-container">
+                                    <div class="input-prefix">
+                                        <i class="fas fa-at"></i>
+                                    </div>
+                                    {{ form.email }}
+                                    <div class="input-suffix">
+                                        <i class="fas fa-check valid-indicator"></i>
+                                    </div>
+                                </div>
+                                <div class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Official email for communication</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phone Field -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="label-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </span>
+                                    <span class="label-text">Phone Number</span>
+                                    <span class="optional-badge">Optional</span>
+                                </label>
+                                <div class="input-container">
+                                    <div class="input-prefix">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    {{ form.phone }}
+                                    <div class="input-suffix">
+                                        <button type="button" class="btn-input-action" title="Format phone number">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Contact number with country code</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Credentials Section -->
+                <div class="form-section mb-5">
+                    <div class="section-header mb-4">
+                        <h3 class="section-title">
+                            <i class="fas fa-key me-2"></i>
+                            Login Credentials
+                        </h3>
+                        <p class="section-subtitle text-muted">Auto-generated login access</p>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <!-- Username Field -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="label-icon">
+                                        <i class="fas fa-user-tag"></i>
+                                    </span>
+                                    <span class="label-text">Username</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-container">
+                                    <div class="input-prefix">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {{ form.username }}
+                                    <div class="input-suffix">
+                                        <button type="button" class="btn-input-action btn-generate" id="generateUsername" title="Generate username">
+                                            <i class="fas fa-wand-magic-sparkles"></i>
+                                        </button>
+                                        <span class="input-availability">
+                                            <i class="fas fa-circle availability-indicator"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Unique identifier for login</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <span class="label-icon">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <span class="label-text">Password</span>
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div class="input-container">
+                                    <div class="input-prefix">
+                                        <i class="fas fa-key"></i>
+                                    </div>
+                                    {{ form.password }}
+                                    <div class="input-suffix">
+                                        <button type="button" class="btn-input-action btn-generate" id="generatePassword" title="Generate password">
+                                            <i class="fas fa-dice"></i>
+                                        </button>
+                                        <button type="button" class="btn-input-action" id="togglePassword" title="Show/hide password">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="password-strength-container">
+                                    <div class="strength-label">
+                                        <span id="passwordStrengthText">Password Strength</span>
+                                        <span class="strength-score" id="strengthScore">0/4</span>
+                                    </div>
+                                    <div class="strength-meter">
+                                        <div class="strength-bar" id="strengthBar"></div>
+                                    </div>
+                                    <div class="strength-requirements">
+                                        <div class="requirement" id="reqLength">
+                                            <i class="fas fa-circle"></i>
+                                            <span>At least 8 characters</span>
+                                        </div>
+                                        <div class="requirement" id="reqUppercase">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Uppercase letter</span>
+                                        </div>
+                                        <div class="requirement" id="reqNumber">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Number</span>
+                                        </div>
+                                        <div class="requirement" id="reqSpecial">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Special character</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions mt-5 pt-4 border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <button type="submit" class="btn btn-create" id="submitButton">
+                                <span class="btn-text">
+                                    <i class="fas fa-plus-circle me-2"></i>
+                                    Create Teacher Account
+                                </span>
+                                <span class="btn-loading d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                    Creating Account...
+                                </span>
+                            </button>
+                            <a href="{% url 'admin_dashboard' %}" class="btn btn-cancel ms-3">
+                                <i class="fas fa-times me-2"></i>
+                                Cancel
+                            </a>
+                        </div>
+                        <div class="form-status">
+                            <div class="status-indicator">
+                                <div class="status-dot status-active"></div>
+                                <span>Account will be active immediately</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="info-card mt-4">
+        <div class="info-header">
+            <i class="fas fa-lightbulb me-2"></i>
+            <strong>How It Works</strong>
+        </div>
+        <div class="info-body">
+            <div class="info-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Fill Form</strong>
+                    <p>Complete all required fields with accurate information</p>
+                </div>
+            </div>
+            <div class="info-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Auto-Create</strong>
+                    <p>System automatically creates User + TeacherProfile</p>
+                </div>
+            </div>
+            <div class="info-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>Login Ready</strong>
+                    <p>Teacher receives credentials and can login immediately!</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+.teacher-form-container {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header Styles */
+.form-header {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+/* Process Steps */
+.process-steps {
+    padding: 1rem 0;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.steps-container::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+.step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: #667eea;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.step-title {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.step-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Form Card */
+.form-card-wrapper {
+    margin: 2rem 0;
+}
+
+.form-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Form Sections */
+.form-section {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.section-header {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+/* Enhanced Form Groups */
+.form-group {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.label-icon {
+    color: #667eea;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.required-indicator {
+    color: #ef4444;
+    font-size: 1.2em;
+    margin-left: 2px;
+}
+
+.optional-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    margin-left: auto;
+}
+
+/* Enhanced Input Containers */
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.input-container:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.input-prefix {
+    padding: 0 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 50px;
+}
+
+/* Enhanced Form Inputs */
+.form-control {
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-primary) !important;
+    padding: 0.875rem 1rem !important;
+    font-size: 0.95rem !important;
+    min-height: 48px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-size: 0.9rem;
+}
+
+/* Input Suffix */
+.input-suffix {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 0.5rem;
+}
+
+.btn-input-action {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.btn-input-action:hover {
+    background: rgba(102, 126, 234, 0.3);
+    color: white;
+    transform: scale(1.05);
+}
+
+.btn-generate {
+    background: rgba(16, 185, 129, 0.2) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+    color: #10b981 !important;
+}
+
+.btn-generate:hover {
+    background: #10b981 !important;
+    color: white !important;
+}
+
+.valid-indicator {
+    color: #10b981;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.input-container.filled .valid-indicator {
+    opacity: 1;
+}
+
+.availability-indicator {
+    color: #ef4444;
+    font-size: 0.6rem;
+    margin-left: 0.5rem;
+}
+
+/* Form Hints */
+.form-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.form-hint i {
+    color: #667eea;
+    font-size: 0.8rem;
+}
+
+/* Password Strength */
+.password-strength-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.strength-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.strength-label span:first-child {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.strength-score {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.strength-meter {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ef4444, #f59e0b, #3b82f6, #10b981);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.strength-requirements {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.requirement i {
+    font-size: 0.5rem;
+    color: #ef4444;
+    transition: color 0.3s ease;
+}
+
+.requirement.satisfied i {
+    color: #10b981;
+}
+
+.requirement.satisfied span {
+    color: #10b981;
+}
+
+/* Action Buttons */
+.form-actions {
+    padding-top: 2rem;
+}
+
+.btn-create {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-create::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-create:hover::before {
+    left: 100%;
+}
+
+.btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    color: white;
+}
+
+.btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+/* Form Status */
+.form-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Info Card */
+.info-card {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 15px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    overflow: hidden;
+}
+
+.info-header {
+    background: rgba(102, 126, 234, 0.2);
+    padding: 1rem 1.5rem;
+    color: #667eea;
+    font-size: 1.1rem;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.info-body {
+    padding: 1.5rem;
+}
+
+.info-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-step:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.step-number {
+    width: 30px;
+    height: 30px;
+    background: #667eea;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content strong {
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.step-content p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .teacher-form-container {
+        padding: 0.5rem;
+    }
+    
+    .form-header {
+        padding: 1rem;
+    }
+    
+    .form-card {
+        padding: 1.5rem;
+    }
+    
+    .header-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .process-steps {
+        overflow-x: auto;
+    }
+    
+    .steps-container {
+        min-width: 500px;
+    }
+    
+    .strength-requirements {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .form-status {
+        justify-content: center;
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form Elements
+    const form = document.getElementById('addTeacherForm');
+    const submitButton = document.getElementById('submitButton');
+    const btnText = submitButton.querySelector('.btn-text');
+    const btnLoading = submitButton.querySelector('.btn-loading');
+    const passwordField = document.querySelector('input[name="password"]');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const generatePasswordBtn = document.getElementById('generatePassword');
+    const generateUsernameBtn = document.getElementById('generateUsername');
+    const nameField = document.querySelector('input[name="name"]');
+    const usernameField = document.querySelector('input[name="username"]');
+    const emailField = document.querySelector('input[name="email"]');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthScore = document.getElementById('strengthScore');
+    const passwordStrengthText = document.getElementById('passwordStrengthText');
+    const requirements = {
+        length: document.getElementById('reqLength'),
+        uppercase: document.getElementById('reqUppercase'),
+        number: document.getElementById('reqNumber'),
+        special: document.getElementById('reqSpecial')
+    };
+
+    // Add input container effects
+    const inputContainers = document.querySelectorAll('.input-container');
+    const formControls = document.querySelectorAll('.form-control');
+
+    formControls.forEach(input => {
+        const container = input.closest('.input-container');
+        
+        // Add filled class when input has value
+        input.addEventListener('input', function() {
+            if (this.value.trim()) {
+                container.classList.add('filled');
+            } else {
+                container.classList.remove('filled');
+            }
+        });
+
+        // Add focus/blur effects
+        input.addEventListener('focus', function() {
+            container.classList.add('focused');
+        });
+
+        input.addEventListener('blur', function() {
+            container.classList.remove('focused');
+        });
+
+        // Check initial value
+        if (input.value.trim()) {
+            container.classList.add('filled');
+        }
+    });
+
+    // Toggle Password Visibility
+    if (togglePasswordBtn && passwordField) {
+        togglePasswordBtn.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            const icon = this.querySelector('i');
+            icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+            this.setAttribute('title', type === 'password' ? 'Show password' : 'Hide password');
+        });
+    }
+
+    // Generate Strong Password
+    if (generatePasswordBtn) {
+        generatePasswordBtn.addEventListener('click', function() {
+            const lowercase = "abcdefghijklmnopqrstuvwxyz";
+            const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const numbers = "0123456789";
+            const specials = "!@#$%^&*";
+            
+            let password = "";
+            password += lowercase[Math.floor(Math.random() * lowercase.length)];
+            password += uppercase[Math.floor(Math.random() * uppercase.length)];
+            password += numbers[Math.floor(Math.random() * numbers.length)];
+            password += specials[Math.floor(Math.random() * specials.length)];
+            
+            for (let i = 0; i < 8; i++) {
+                const charset = lowercase + uppercase + numbers + specials;
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            
+            // Shuffle the password
+            password = password.split('').sort(() => Math.random() - 0.5).join('');
+            
+            passwordField.value = password;
+            checkPasswordStrength(password);
+            
+            // Show success animation
+            this.classList.add('generated');
+            setTimeout(() => this.classList.remove('generated'), 1000);
+        });
+    }
+
+    // Generate Username from Name
+    if (generateUsernameBtn && nameField && usernameField) {
+        generateUsernameBtn.addEventListener('click', function() {
+            const name = nameField.value.trim();
+            if (name) {
+                const nameParts = name.toLowerCase().split(' ');
+                const firstName = nameParts[0];
+                const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'user';
+                const randomNum = Math.floor(Math.random() * 900) + 100;
+                const username = `${firstName}.${lastName}${randomNum}`;
+                usernameField.value = username;
+                
+                // Show success animation
+                this.classList.add('generated');
+                setTimeout(() => this.classList.remove('generated'), 1000);
+            }
+        });
+    }
+
+    // Check Password Strength
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        let score = 0;
+        let text = 'Weak';
+        let color = '#ef4444';
+        
+        // Check requirements
+        const hasLength = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[^A-Za-z0-9]/.test(password);
+        
+        // Update requirement indicators
+        updateRequirement(requirements.length, hasLength);
+        updateRequirement(requirements.uppercase, hasUppercase);
+        updateRequirement(requirements.number, hasNumber);
+        updateRequirement(requirements.special, hasSpecial);
+        
+        // Calculate strength
+        if (hasLength) strength++;
+        if (hasUppercase) strength++;
+        if (hasNumber) strength++;
+        if (hasSpecial) strength++;
+        
+        // Update UI
+        const percentage = (strength / 4) * 100;
+        strengthBar.style.width = percentage + '%';
+        
+        switch(strength) {
+            case 1:
+                text = 'Weak';
+                color = '#ef4444';
+                score = 1;
+                break;
+            case 2:
+                text = 'Fair';
+                color = '#f59e0b';
+                score = 2;
+                break;
+            case 3:
+                text = 'Good';
+                color = '#3b82f6';
+                score = 3;
+                break;
+            case 4:
+                text = 'Strong';
+                color = '#10b981';
+                score = 4;
+                break;
+            default:
+                text = 'Very Weak';
+                color = '#ef4444';
+                score = 0;
+        }
+        
+        strengthBar.style.background = `linear-gradient(90deg, ${color}, ${color})`;
+        passwordStrengthText.textContent = `Password Strength: ${text}`;
+        passwordStrengthText.style.color = color;
+        strengthScore.textContent = `${score}/4`;
+        strengthScore.style.color = color;
+    }
+
+    function updateRequirement(element, satisfied) {
+        if (satisfied) {
+            element.classList.add('satisfied');
+        } else {
+            element.classList.remove('satisfied');
+        }
+    }
+
+    // Password strength on input
+    if (passwordField) {
+        passwordField.addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+        
+        // Initial check
+        checkPasswordStrength(passwordField.value);
+    }
+
+    // Auto-fill username on name change
+    if (nameField && usernameField) {
+        nameField.addEventListener('blur', function() {
+            if (nameField.value && !usernameField.value) {
+                const name = nameField.value.trim();
+                const nameParts = name.toLowerCase().split(' ');
+                if (nameParts.length >= 2) {
+                    const username = `${nameParts[0]}.${nameParts[nameParts.length - 1]}`;
+                    usernameField.value = username;
+                    const container = usernameField.closest('.input-container');
+                    if (container) container.classList.add('filled');
+                }
+            }
+        });
+    }
+
+    // Email validation
+    if (emailField) {
+        emailField.addEventListener('blur', function() {
+            const email = this.value.trim();
+            const container = this.closest('.input-container');
+            if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                container.classList.add('valid');
+            } else {
+                container.classList.remove('valid');
+            }
+        });
+    }
+
+    // Form Submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate required fields
+            const requiredFields = form.querySelectorAll('.form-control[required]');
+            let isValid = true;
+            let firstInvalid = null;
+            
+            requiredFields.forEach(field => {
+                const container = field.closest('.input-container');
+                if (!field.value.trim()) {
+                    isValid = false;
+                    container.classList.add('invalid');
+                    if (!firstInvalid) firstInvalid = field;
+                } else {
+                    container.classList.remove('invalid');
+                }
+            });
+            
+            if (!isValid) {
+                if (firstInvalid) firstInvalid.focus();
+                return;
+            }
+            
+            // Show loading state
+            btnText.classList.add('d-none');
+            btnLoading.classList.remove('d-none');
+            submitButton.disabled = true;
+            
+            // Submit form
+            setTimeout(() => {
+                this.submit();
+            }, 1500);
+        });
+    }
+
+    // Phone number formatting
+    const phoneField = document.querySelector('input[name="phone"]');
+    const formatPhoneBtn = document.querySelector('.btn-input-action .fa-sync-alt')?.closest('button');
+    
+    if (formatPhoneBtn && phoneField) {
+        formatPhoneBtn.addEventListener('click', function() {
+            let phone = phoneField.value.replace(/\D/g, '');
+            if (phone.length === 10) {
+                phoneField.value = `+1 (${phone.slice(0,3)}) ${phone.slice(3,6)}-${phone.slice(6)}`;
+            }
+        });
+    }
+
+    // Animate form sections on load
+    const formSections = document.querySelectorAll('.form-section');
+    formSections.forEach((section, index) => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+});
+</script>
 {% endblock %}

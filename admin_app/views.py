@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from .models import Teacher
 from .forms import TeacherForm
 from student.models import StudentProfile
-from teacher.models import TeacherProfile, TeacherRegistrationRequest
+from teacher.models import TeacherProfile
 
 def admin_login(request):
     if request.method == 'POST':
@@ -24,7 +24,6 @@ def admin_login(request):
 def admin_dashboard(request):
     teachers = Teacher.objects.all()
     pending_students = StudentProfile.objects.filter(approved=False)
-    pending_teachers = TeacherRegistrationRequest.objects.filter(approved=False)
     
     # ✅ PERFECT: Single list of dicts - NO template filters needed!
     teacher_data = []
@@ -49,10 +48,9 @@ def admin_dashboard(request):
             })
     
     return render(request, 'admin_app/dashboard.html', {
-        'teacher_data': teacher_data,           # ✅ Single perfect list!
+        'teacher_data': teacher_data,
         'active_teachers': active_teachers_count,
         'pending_students': pending_students,
-        'pending_teachers': pending_teachers,
         'pending_count': pending_students.count()
     })
 
@@ -106,32 +104,6 @@ def approve_student(request, pk):
         return redirect('admin_dashboard')
     return render(request, 'admin_app/approve_student.html', {'student': student})
 
-@login_required
-def approve_teacher_request(request, pk):
-    teacher_req = get_object_or_404(TeacherRegistrationRequest, pk=pk)
-    if request.method == 'POST':
-        teacher = Teacher.objects.create(
-            name=teacher_req.name,
-            email=teacher_req.email,
-            department=teacher_req.department,
-            subject=teacher_req.subject,
-            phone=teacher_req.phone
-        )
-        
-        username = teacher_req.email.split('@')[0]
-        user = User.objects.create_user(
-            username=username,
-            email=teacher_req.email,
-            password='Welcome123!'
-        )
-        
-        TeacherProfile.objects.create(user=user, teacher=teacher)
-        teacher_req.approved = True
-        teacher_req.save()
-        
-        messages.success(request, f'Teacher "{teacher_req.name}" approved! Login: {username}/Welcome123!')
-        return redirect('admin_dashboard')
-    return render(request, 'admin_app/approve_teacher.html', {'teacher_req': teacher_req})
 
 @login_required
 def reset_teacher_password(request, pk):

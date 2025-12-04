@@ -6,81 +6,292 @@
     <title>BOOKHUB - Student Teacher Appointment Booking</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
-        body { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a2e;
+            --accent-purple: #7c3aed;
+            --accent-blue: #3b82f6;
+            --accent-pink: #ec4899;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            --glow-intensity: 0 0 20px;
         }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+
+        /* Header Styling */
+        .header-title {
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Role Cards */
         .role-card {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            background: rgba(30, 30, 46, 0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow);
         }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            z-index: 1;
+        }
+
         .role-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: var(--glow-intensity);
         }
-        .role-icon { font-size: 4rem; color: white; }
-        .admin-card { background: linear-gradient(45deg, #ff6b6b, #ee5a24); }
-        .teacher-card { background: linear-gradient(45deg, #4834d4, #686de0); }
-        .student-card { background: linear-gradient(45deg, #10ac84, #1dd1a1); }
+
+        .role-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .role-card:hover .role-icon {
+            transform: scale(1.2);
+        }
+
+        /* Card Color Themes */
+        .admin-card::before {
+            background: linear-gradient(90deg, #f43f5e, #fb7185);
+        }
+
+        .admin-card:hover {
+            box-shadow: var(--glow-intensity) rgba(244, 63, 94, 0.4);
+        }
+
+        .admin-icon {
+            color: #f43f5e;
+            text-shadow: 0 0 20px rgba(244, 63, 94, 0.5);
+        }
+
+        .teacher-card::before {
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+        }
+
+        .teacher-card:hover {
+            box-shadow: var(--glow-intensity) rgba(139, 92, 246, 0.4);
+        }
+
+        .teacher-icon {
+            color: #8b5cf6;
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .student-card::before {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .student-card:hover {
+            box-shadow: var(--glow-intensity) rgba(16, 185, 129, 0.4);
+        }
+
+        .student-icon {
+            color: #10b981;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Card Content */
+        .card-body {
+            padding: 2.5rem 1.5rem;
+            z-index: 2;
+            position: relative;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer-text {
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .arrow-icon {
+            color: var(--accent-purple);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+            
+            .role-card {
+                margin-bottom: 1.5rem;
+            }
+            
+            .role-icon {
+                font-size: 3rem;
+            }
+        }
+
+        /* Background elements */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
     </style>
 </head>
-<body class="d-flex align-items-center justify-content-center">
+<body>
+    <div class="bg-grid"></div>
+    
     <div class="container text-center py-5">
-        <h1 class="display-4 fw-bold text-white mb-5 animate__animated animate__fadeIn">
-            <i class="fas fa-calendar-check me-3"></i>BOOKHUB
-        </h1>
-        <p class="lead text-white-50 mb-5 animate__animated animate__fadeInUp">Student-Teacher Appointment Booking System</p>
+        <div class="mb-5 animate__animated animate__fadeIn">
+            <h1 class="display-4 fw-bold header-title">
+                <i class="fas fa-calendar-check me-3"></i>BOOKHUB
+            </h1>
+            <p class="header-subtitle lead mb-5 animate__animated animate__fadeInUp">
+                Student-Teacher Appointment Booking System
+            </p>
+        </div>
         
         <div class="row g-4 justify-content-center">
             <!-- ADMIN ROLE -->
-            <div class="col-md-3">
+            <div class="col-lg-3 col-md-6">
                 <a href="/admin_app/" class="text-decoration-none">
-                    <div class="card role-card admin-card h-100">
+                    <div class="card role-card admin-card h-100 animate__animated animate__fadeInLeft">
                         <div class="card-body p-4">
-                            <div class="role-icon mb-3"><i class="fas fa-user-shield"></i></div>
-                            <h3 class="text-white fw-bold mb-2">ADMIN</h3>
-                            <p class="text-white-50 mb-0">Manage Teachers & Students</p>
+                            <div class="role-icon admin-icon">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <h3 class="card-title text-white">ADMIN</h3>
+                            <p class="card-text">
+                                Manage system settings, teachers, students, and appointments
+                            </p>
                         </div>
                     </div>
                 </a>
             </div>
 
             <!-- TEACHER ROLE -->
-            <div class="col-md-3">
+            <div class="col-lg-3 col-md-6">
                 <a href="/teacher/" class="text-decoration-none">
-                    <div class="card role-card teacher-card h-100">
+                    <div class="card role-card teacher-card h-100 animate__animated animate__fadeInUp">
                         <div class="card-body p-4">
-                            <div class="role-icon mb-3"><i class="fas fa-chalkboard-teacher"></i></div>
-                            <h3 class="text-white fw-bold mb-2">TEACHER</h3>
-                            <p class="text-white-50 mb-0">Schedule & Manage Appointments</p>
+                            <div class="role-icon teacher-icon">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <h3 class="card-title text-white">TEACHER</h3>
+                            <p class="card-text">
+                                Schedule, manage appointments, and communicate with students
+                            </p>
                         </div>
                     </div>
                 </a>
             </div>
 
             <!-- STUDENT ROLE -->
-            <div class="col-md-3">
+            <div class="col-lg-3 col-md-6">
                 <a href="/student/" class="text-decoration-none">
-                    <div class="card role-card student-card h-100">
+                    <div class="card role-card student-card h-100 animate__animated animate__fadeInRight">
                         <div class="card-body p-4">
-                            <div class="role-icon mb-3"><i class="fas fa-user-graduate"></i></div>
-                            <h3 class="text-white fw-bold mb-2">STUDENT</h3>
-                            <p class="text-white-50 mb-0">Book Appointments & Send Messages</p>
+                            <div class="role-icon student-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h3 class="card-title text-white">STUDENT</h3>
+                            <p class="card-text">
+                                Book appointments, send messages, and manage your schedule
+                            </p>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
 
-        <div class="mt-5">
-            <p class="text-white-50">Select your role to continue <i class="fas fa-arrow-down ms-2"></i></p>
+        <div class="mt-5 pt-4 animate__animated animate__fadeInUp">
+            <p class="footer-text">
+                Select your role to continue 
+                <i class="fas fa-arrow-down ms-2 arrow-icon"></i>
+            </p>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.js"></script>
+    <script>
+        // Add hover sound effect on card interaction (optional)
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.role-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '1';
+                });
+            });
+            
+            // Add a subtle parallax effect to background grid
+            document.addEventListener('mousemove', function(e) {
+                const grid = document.querySelector('.bg-grid');
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                
+                grid.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
+            });
+        });
+    </script>
 </body>
 </html>

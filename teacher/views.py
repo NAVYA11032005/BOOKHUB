@@ -65,20 +65,3 @@ def manage_appointment(request, pk):
 def teacher_logout(request):
     logout(request)
     return redirect('/')
-from .models import TeacherRegistrationRequest
-
-def teacher_register(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        department = request.POST['department']
-        subject = request.POST['subject']
-        phone = request.POST.get('phone', '')
-        
-        TeacherRegistrationRequest.objects.create(
-            name=name, email=email, department=department,
-            subject=subject, phone=phone
-        )
-        messages.success(request, 'Registration submitted! Waiting for admin approval.')
-        return redirect('teacher_login')
-    return render(request, 'teacher/register.html')

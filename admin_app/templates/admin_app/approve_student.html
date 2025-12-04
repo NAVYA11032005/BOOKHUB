@@ -1,17 +1,990 @@
 {% extends 'admin_app/base.html' %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h3>Approve Student: {{ student.name }}</h3>
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label class="form-label">Status</label>
-                {{ form.approved }}
+<div class="approval-container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="approval-card-wrapper">
+        <!-- Main Approval Card -->
+        <div class="card approval-card border-0">
+            <!-- Animated Background -->
+            <div class="animated-background">
+                <div class="particle particle-1"></div>
+                <div class="particle particle-2"></div>
+                <div class="particle particle-3"></div>
+                <div class="gradient-wave"></div>
             </div>
-            <button type="submit" class="btn btn-success">Save</button>
-            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
-        </form>
+            
+            <!-- Card Header -->
+            <div class="card-header approval-header position-relative overflow-hidden">
+                <div class="header-glow"></div>
+                <div class="header-content position-relative z-2 text-center py-4">
+                    <div class="student-icon-wrapper mb-3">
+                        <div class="student-icon-circle">
+                            <div class="icon-ring"></div>
+                            <div class="icon-inner">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="approval-title text-white mb-1">
+                        <span class="text-gradient">Approve Student</span>
+                    </h1>
+                    <p class="approval-subtitle text-white-50 mb-0">Registration Status Management</p>
+                </div>
+            </div>
+            
+            <!-- Student Information -->
+            <div class="student-info-section p-4 border-bottom">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-user me-2"></i>
+                            Student Name
+                        </div>
+                        <div class="info-value">{{ student.name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-envelope me-2"></i>
+                            Email Address
+                        </div>
+                        <div class="info-value">{{ student.email }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-phone me-2"></i>
+                            Phone Number
+                        </div>
+                        <div class="info-value">{{ student.phone|default:"Not provided" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-calendar-plus me-2"></i>
+                            Registered On
+                        </div>
+                        <div class="info-value">{{ student.created_at|date:"M d, Y H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card Body -->
+            <div class="card-body approval-body p-4 p-md-5">
+                <form method="post" class="approval-form" id="approvalForm">
+                    {% csrf_token %}
+                    
+                    <!-- Status Selection -->
+                    <div class="form-group mb-5">
+                        <label class="form-label text-light mb-3 d-flex align-items-center">
+                            <span class="input-icon-wrapper me-2">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                            <span class="label-text">Approval Status</span>
+                        </label>
+                        
+                        <div class="status-options">
+                            <!-- Approved Option -->
+                            <label class="status-option approved-option">
+                                <input type="radio" 
+                                       name="approved" 
+                                       value="true" 
+                                       {% if form.approved.value %}checked{% endif %}
+                                       class="status-radio" 
+                                       id="statusApproved">
+                                <div class="option-content">
+                                    <div class="option-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="option-details">
+                                        <div class="option-title">Approve Student</div>
+                                        <div class="option-description">
+                                            Student will gain full access to the system
+                                        </div>
+                                    </div>
+                                    <div class="option-indicator">
+                                        <div class="indicator-dot"></div>
+                                    </div>
+                                </div>
+                            </label>
+                            
+                            <!-- Denied Option -->
+                            <label class="status-option denied-option">
+                                <input type="radio" 
+                                       name="approved" 
+                                       value="false" 
+                                       {% if not form.approved.value %}checked{% endif %}
+                                       class="status-radio" 
+                                       id="statusDenied">
+                                <div class="option-content">
+                                    <div class="option-icon">
+                                        <i class="fas fa-times-circle"></i>
+                                    </div>
+                                    <div class="option-details">
+                                        <div class="option-title">Deny Access</div>
+                                        <div class="option-description">
+                                            Student will not be able to access the system
+                                        </div>
+                                    </div>
+                                    <div class="option-indicator">
+                                        <div class="indicator-dot"></div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="form-hint mt-3">
+                            <small class="d-flex align-items-center text-muted">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Select the appropriate status for this student registration
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="form-actions mt-5 pt-4 border-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button type="submit" class="btn btn-approve" id="submitButton">
+                                    <div class="btn-content">
+                                        <i class="fas fa-save me-2"></i>
+                                        <span>Save Changes</span>
+                                    </div>
+                                    <div class="btn-loading d-none">
+                                        <div class="spinner-dots">
+                                            <div class="spinner-dot"></div>
+                                            <div class="spinner-dot"></div>
+                                            <div class="spinner-dot"></div>
+                                        </div>
+                                        <span>Processing...</span>
+                                    </div>
+                                </button>
+                                <a href="{% url 'admin_dashboard' %}" class="btn btn-cancel ms-3">
+                                    <i class="fas fa-times me-2"></i>
+                                    Cancel
+                                </a>
+                            </div>
+                            <div class="status-preview" id="statusPreview">
+                                <div class="preview-label">Current Status:</div>
+                                <div class="preview-value status-pending">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Pending Review
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Card Footer -->
+            <div class="card-footer approval-footer py-3">
+                <div class="footer-content text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Changes to student status are permanent and will affect system access immediately
+                    </small>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    :root {
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #0a0a14 0%, #141428 100%);
+        --gradient-success: linear-gradient(135deg, #10b981, #059669);
+        --gradient-danger: linear-gradient(135deg, #ef4444, #dc2626);
+        --color-primary: #667eea;
+        --color-secondary: #764ba2;
+        --color-success: #10b981;
+        --color-danger: #ef4444;
+        --color-warning: #f59e0b;
+        --color-dark: #0a0a14;
+        --color-light: #f8fafc;
+        --color-muted: #94a3b8;
+        --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.3);
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    .approval-container {
+        background: var(--gradient-secondary);
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        padding: 1rem;
+    }
+
+    .approval-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+        z-index: 1;
+        animation: gradient-shift 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradient-shift {
+        0% { transform: scale(1) rotate(0deg); }
+        100% { transform: scale(1.1) rotate(180deg); }
+    }
+
+    .approval-card-wrapper {
+        width: 100%;
+        max-width: 700px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .approval-card {
+        border-radius: 20px;
+        overflow: hidden;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-xl);
+        transform: translateY(0);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .approval-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    /* Animated Background */
+    .animated-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .particle {
+        position: absolute;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: float 15s infinite linear;
+    }
+
+    .particle-1 {
+        width: 80px;
+        height: 80px;
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .particle-2 {
+        width: 120px;
+        height: 120px;
+        top: 60%;
+        right: 15%;
+        animation-delay: -5s;
+    }
+
+    .particle-3 {
+        width: 60px;
+        height: 60px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: -10s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-15px) rotate(90deg); }
+        50% { transform: translateY(0) rotate(180deg); }
+        75% { transform: translateY(15px) rotate(270deg); }
+    }
+
+    .gradient-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 200%;
+        height: 80px;
+        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.15), transparent);
+        animation: wave 12s infinite linear;
+    }
+
+    @keyframes wave {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    /* Header */
+    .approval-header {
+        background: var(--gradient-primary);
+        position: relative;
+        padding: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+    }
+
+    .header-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+        50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    .student-icon-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .student-icon-circle {
+        width: 80px;
+        height: 80px;
+        position: relative;
+    }
+
+    .icon-ring {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px solid transparent;
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin-ring 3s linear infinite;
+    }
+
+    @keyframes spin-ring {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .icon-inner {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 70px;
+        height: 70px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
+        font-size: 2rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .approval-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .text-gradient {
+        background: linear-gradient(135deg, #fff, #00d4ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: text-shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes text-shimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .approval-subtitle {
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        opacity: 0.8;
+    }
+
+    /* Student Information */
+    .student-info-section {
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .info-item {
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: var(--color-muted);
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-label i {
+        color: var(--color-primary);
+        width: 20px;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: var(--color-light);
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    /* Card Body */
+    .approval-body {
+        background: transparent;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--color-light);
+        margin-bottom: 1rem;
+    }
+
+    .input-icon-wrapper {
+        color: var(--color-primary);
+        font-size: 1.1rem;
+    }
+
+    /* Status Options */
+    .status-options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .status-option {
+        position: relative;
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .status-option:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-2px);
+    }
+
+    .status-option:has(.status-radio:checked) {
+        border-color: var(--color-primary);
+        background: rgba(102, 126, 234, 0.1);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+    }
+
+    .approved-option:has(.status-radio:checked) {
+        border-color: var(--color-success);
+        background: rgba(16, 185, 129, 0.1);
+        box-shadow: 0 5px 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .denied-option:has(.status-radio:checked) {
+        border-color: var(--color-danger);
+        background: rgba(239, 68, 68, 0.1);
+        box-shadow: 0 5px 20px rgba(239, 68, 68, 0.2);
+    }
+
+    .status-radio {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .option-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .option-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .approved-option .option-icon {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--color-success);
+    }
+
+    .denied-option .option-icon {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--color-danger);
+    }
+
+    .option-details {
+        flex: 1;
+    }
+
+    .option-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-light);
+        margin-bottom: 0.25rem;
+    }
+
+    .option-description {
+        font-size: 0.9rem;
+        color: var(--color-muted);
+        line-height: 1.4;
+    }
+
+    .option-indicator {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .status-option:has(.status-radio:checked) .option-indicator {
+        border-color: var(--color-primary);
+    }
+
+    .approved-option:has(.status-radio:checked) .option-indicator {
+        border-color: var(--color-success);
+    }
+
+    .denied-option:has(.status-radio:checked) .option-indicator {
+        border-color: var(--color-danger);
+    }
+
+    .indicator-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        transform: scale(0);
+        transition: transform 0.3s ease;
+    }
+
+    .status-option:has(.status-radio:checked) .indicator-dot {
+        transform: scale(1);
+    }
+
+    .approved-option:has(.status-radio:checked) .indicator-dot {
+        background: var(--color-success);
+    }
+
+    .denied-option:has(.status-radio:checked) .indicator-dot {
+        background: var(--color-danger);
+    }
+
+    .form-hint {
+        font-size: 0.9rem;
+    }
+
+    /* Action Buttons */
+    .form-actions {
+        padding-top: 2rem;
+    }
+
+    .btn-approve {
+        background: var(--gradient-primary);
+        border: none;
+        color: white;
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        min-width: 160px;
+    }
+
+    .btn-approve:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-cancel {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--text-secondary);
+        padding: 0.875rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: var(--text-primary);
+        transform: translateY(-2px);
+    }
+
+    .btn-content, .btn-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .spinner-dots {
+        display: flex;
+        gap: 4px;
+        margin-right: 0.75rem;
+    }
+
+    .spinner-dot {
+        width: 6px;
+        height: 6px;
+        background: white;
+        border-radius: 50%;
+        animation: dot-pulse 1.4s ease-in-out infinite;
+    }
+
+    .spinner-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .spinner-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes dot-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(0.8); opacity: 0.6; }
+    }
+
+    /* Status Preview */
+    .status-preview {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .preview-label {
+        font-size: 0.9rem;
+        color: var(--color-muted);
+    }
+
+    .preview-value {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--color-warning);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-approved {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--color-success);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-denied {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--color-danger);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Footer */
+    .approval-footer {
+        background: rgba(255, 255, 255, 0.02);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-content {
+        font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .approval-container {
+            padding: 0.5rem;
+        }
+        
+        .student-icon-circle {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .icon-inner {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+        
+        .approval-title {
+            font-size: 1.5rem;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-actions .d-flex {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .status-preview {
+            justify-content: center;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .option-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 0.75rem;
+        }
+        
+        .option-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .btn-approve, .btn-cancel {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-cancel {
+            margin-left: 0 !important;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const form = document.getElementById('approvalForm');
+    const submitButton = document.getElementById('submitButton');
+    const btnContent = submitButton.querySelector('.btn-content');
+    const btnLoading = submitButton.querySelector('.btn-loading');
+    const statusRadios = document.querySelectorAll('.status-radio');
+    const statusPreview = document.getElementById('statusPreview');
+    const previewValue = statusPreview.querySelector('.preview-value');
+
+    // Initialize status preview
+    function updateStatusPreview() {
+        const approvedRadio = document.querySelector('#statusApproved:checked');
+        const deniedRadio = document.querySelector('#statusDenied:checked');
+        
+        previewValue.className = 'preview-value';
+        
+        if (approvedRadio) {
+            previewValue.classList.add('status-approved');
+            previewValue.innerHTML = '<i class="fas fa-check-circle me-1"></i>Approved';
+            submitButton.style.background = 'var(--gradient-success)';
+        } else if (deniedRadio) {
+            previewValue.classList.add('status-denied');
+            previewValue.innerHTML = '<i class="fas fa-times-circle me-1"></i>Denied';
+            submitButton.style.background = 'var(--gradient-danger)';
+        } else {
+            previewValue.classList.add('status-pending');
+            previewValue.innerHTML = '<i class="fas fa-clock me-1"></i>Pending Review';
+            submitButton.style.background = 'var(--gradient-primary)';
+        }
+    }
+
+    // Update status preview when radio changes
+    statusRadios.forEach(radio => {
+        radio.addEventListener('change', updateStatusPreview);
+        
+        // Add animation on change
+        radio.addEventListener('change', function() {
+            const option = this.closest('.status-option');
+            option.classList.add('selected');
+            setTimeout(() => option.classList.remove('selected'), 300);
+        });
+    });
+
+    // Initial preview update
+    updateStatusPreview();
+
+    // Form submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Show loading state
+            btnContent.classList.add('d-none');
+            btnLoading.classList.remove('d-none');
+            submitButton.disabled = true;
+            submitButton.style.cursor = 'not-allowed';
+            
+            // Add confirmation for deny action
+            const deniedRadio = document.querySelector('#statusDenied:checked');
+            if (deniedRadio && !confirm('Are you sure you want to deny access to this student? This action cannot be undone.')) {
+                e.preventDefault();
+                btnContent.classList.remove('d-none');
+                btnLoading.classList.add('d-none');
+                submitButton.disabled = false;
+                submitButton.style.cursor = 'pointer';
+                return;
+            }
+            
+            // Add success animation
+            submitButton.style.animation = 'button-success 0.5s';
+            setTimeout(() => {
+                submitButton.style.animation = '';
+            }, 500);
+            
+            // Form will submit normally
+        });
+    }
+
+    // Add hover effects to status options
+    const statusOptions = document.querySelectorAll('.status-option');
+    statusOptions.forEach(option => {
+        option.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.02)';
+        });
+        
+        option.addEventListener('mouseleave', function() {
+            if (!this.querySelector('.status-radio:checked')) {
+                this.style.transform = '';
+            }
+        });
+    });
+
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes button-success {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.98); }
+        }
+        
+        .status-option.selected {
+            animation: option-select 0.3s ease;
+        }
+        
+        @keyframes option-select {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 rgba(102, 126, 234, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.4); }
+        }
+        
+        .status-option:has(.status-radio:checked) {
+            animation: pulse-glow 2s infinite;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Card hover effect
+    const card = document.querySelector('.approval-card');
+    if (card) {
+        card.addEventListener('mousemove', function(e) {
+            if (window.innerWidth > 768) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateY = (x - centerX) / 40;
+                const rotateX = (centerY - y) / 40;
+                
+                this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+            }
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(-5px)';
+        });
+    }
+
+    // Update button text based on selection
+    function updateButtonText() {
+        const approvedRadio = document.querySelector('#statusApproved:checked');
+        const deniedRadio = document.querySelector('#statusDenied:checked');
+        
+        const btnText = submitButton.querySelector('.btn-content span');
+        if (approvedRadio) {
+            btnText.textContent = 'Approve Student';
+        } else if (deniedRadio) {
+            btnText.textContent = 'Deny Access';
+        } else {
+            btnText.textContent = 'Save Changes';
+        }
+    }
+
+    statusRadios.forEach(radio => {
+        radio.addEventListener('change', updateButtonText);
+    });
+
+    // Initialize button text
+    updateButtonText();
+
+    // Add confirmation dialog for cancel
+    const cancelBtn = document.querySelector('.btn-cancel');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function(e) {
+            const approvedRadio = document.querySelector('#statusApproved:checked');
+            const deniedRadio = document.querySelector('#statusDenied:checked');
+            
+            if (approvedRadio || deniedRadio) {
+                if (!confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
